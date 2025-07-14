@@ -43,6 +43,7 @@ export class PokemonService {
             generation: parseInt(data.generation) || 1,
             legendary: data.legendary === 'True' || data.legendary === 'true' || data.legendary === 'false' ? data.legendary === 'True' || data.legendary === 'true' : false,
             image: data.image ?? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.length + 1}.png`,
+            ytbUrl: data.ytbUrl,
           };
 
           if (!pokemon.name || !pokemon.type1) {
