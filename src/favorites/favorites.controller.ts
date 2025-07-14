@@ -7,11 +7,9 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-// import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 // import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @Controller('favorites')
-// @UseGuards(JwtAuthGuard)
 export class FavoritesController {
   constructor(private favoritesService: FavoritesService) {}
 

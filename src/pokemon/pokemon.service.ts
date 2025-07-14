@@ -28,21 +28,21 @@ export class PokemonService {
       fs.createReadStream(filePath)
         .pipe(csv())
         .on('data', (data) => {
-
           const pokemon = {
-            name: data.Name?.trim(),
-            type1: data.Type1?.trim(),
-            type2: data.Type2?.trim() || null,
-            total: parseInt(data.Total) || 0,
-            hp: parseInt(data.HP) || 0,
-            attack: parseInt(data.Attack) || 0,
-            defense: parseInt(data.Defense) || 0,
-            spAttack: parseInt(data['Sp. Atk']) || 0,
-            spDefense: parseInt(data['Sp. Def']) || 0,
-            speed: parseInt(data.Speed) || 0,
-            generation: parseInt(data.Generation) || 1,
-            legendary: data.Legendary === 'True' || data.Legendary === 'true',
-            imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.length + 1}.png`,
+            id: data.id,
+            name: data.name?.trim(),
+            type1: data.type1?.trim(),
+            type2: data.type2?.trim() || null,
+            total: parseInt(data.total) || 0,
+            hp: parseInt(data.hp) || 0,
+            attack: parseInt(data.attack) || 0,
+            defense: parseInt(data.defense) || 0,
+            spAttack: parseInt(data.spAttack ?? data['spAttack'] ?? data['Sp. Atk']) || 0,
+            spDefense: parseInt(data.spDefense ?? data['spDefense'] ?? data['Sp. Def']) || 0,
+            speed: parseInt(data.speed) || 0,
+            generation: parseInt(data.generation) || 1,
+            legendary: data.legendary === 'True' || data.legendary === 'true' || data.legendary === 'false' ? data.legendary === 'True' || data.legendary === 'true' : false,
+            image: data.image ?? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonData.length + 1}.png`,
           };
 
           if (!pokemon.name || !pokemon.type1) {
@@ -54,8 +54,10 @@ export class PokemonService {
         })
         .on('end', async () => {
           try {
-            await this.pokemonRepository.clear();
-
+            await this.pokemonRepository
+              .createQueryBuilder()
+              .delete()
+              .execute();
             const batchSize = 100;
             for (let i = 0; i < pokemonData.length; i += batchSize) {
               const batch = pokemonData.slice(i, i + batchSize);
@@ -74,7 +76,7 @@ export class PokemonService {
     });
   }
 
-  async findAll(query: PokemonQueryDto): Promise<{
+  async findPokemon(query: PokemonQueryDto): Promise<{
     data: Pokemon[];
     total: number;
     page: number;
@@ -126,7 +128,7 @@ export class PokemonService {
     const skip = (page - 1) * limit;
     queryBuilder.skip(skip).take(limit);
 
-    queryBuilder.orderBy('pokemon.name', 'ASC');
+    queryBuilder.orderBy('pokemon.id', 'ASC');
 
     const [data, total] = await queryBuilder.getManyAndCount();
 

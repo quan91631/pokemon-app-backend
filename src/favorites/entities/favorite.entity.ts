@@ -24,7 +24,4 @@ export class Favorite {
   })
   @JoinColumn({ name: 'pokemonId' })
   pokemon: Pokemon;
-
-  @CreateDateColumn()
-  createdAt: Date;
 }

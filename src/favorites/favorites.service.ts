@@ -52,7 +52,6 @@ export class FavoritesService {
     return this.favoritesRepository.find({
       where: { user: { id: userId } },
       relations: ['pokemon'],
-      order: { createdAt: 'DESC' },
     });
   }
 

@@ -27,12 +27,6 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
   @OneToMany(() => Favorite, favorite => favorite.user)
   favorites: Favorite[];
 

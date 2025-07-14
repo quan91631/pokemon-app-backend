@@ -37,7 +37,10 @@ export class PokemonController {
       }),
       fileFilter: (req, file, cb) => {
         if (file.mimetype !== 'text/csv') {
-          return cb(new BadRequestException('Only CSV files are allowed'), false);
+          return cb(
+            new BadRequestException('Only CSV files are allowed'),
+            false,
+          );
         }
         cb(null, true);
       },
@@ -47,18 +50,18 @@ export class PokemonController {
     if (!file) {
       throw new BadRequestException('No file uploaded');
     }
-    
+
     const result = await this.pokemonService.importFromCsv(file.path);
 
     const fs = require('fs');
     fs.unlinkSync(file.path);
-    
+
     return result;
   }
 
   @Get()
-  async findAll(@Query() query: PokemonQueryDto) {
-    return this.pokemonService.findAll(query);
+  async findPokemon(@Query() query: PokemonQueryDto) {
+    return this.pokemonService.findPokemon(query);
   }
 
   @Get('first')

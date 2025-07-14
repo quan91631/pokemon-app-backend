@@ -50,14 +50,12 @@ export class Pokemon {
   legendary: boolean;
 
   @Column({ nullable: true })
-  imageUrl: string;
+  image: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({ nullable: true })
+  ytbUrl: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
 
-  @OneToMany(() => Favorite, favorite => favorite.pokemon)
-  favorites: Favorite[];
+  @OneToMany(() => Favorite, (favorite) => favorite.pokemon)
+  favorites: Favorite[] | null;
 }
